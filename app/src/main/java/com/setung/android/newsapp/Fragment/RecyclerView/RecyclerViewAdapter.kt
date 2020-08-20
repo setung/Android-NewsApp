@@ -10,15 +10,14 @@ import com.bumptech.glide.Glide
 import com.setung.android.newsapp.Model.Article
 import com.setung.android.newsapp.R
 
-class RecyclerViewAdapter(onClick: View.OnClickListener) :
+class RecyclerViewAdapter(onClick: View.OnClickListener,onLongClick:View.OnLongClickListener) :
     RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
 
     var myDataset: ArrayList<Article> = ArrayList()
-
     var onClickNewsListener: View.OnClickListener = onClick
+    var onNewsLongClickListener : View.OnLongClickListener = onLongClick
 
-
-    class MyViewHolder(val v: View, onClickNewsListener: View.OnClickListener) :
+    class MyViewHolder(val v: View, onClickNewsListener: View.OnClickListener, onNewsLongClickListener : View.OnLongClickListener) :
         RecyclerView.ViewHolder(v) {
         var tv_title: TextView = v.findViewById(R.id.item_tv_title)
         var tv_contents: TextView = v.findViewById(R.id.item_tv_contents)
@@ -28,6 +27,7 @@ class RecyclerViewAdapter(onClick: View.OnClickListener) :
             v.isClickable = true
             v.isEnabled = true
             v.setOnClickListener(onClickNewsListener)
+            v.setOnLongClickListener(onNewsLongClickListener)
         }
     }
 
@@ -37,7 +37,7 @@ class RecyclerViewAdapter(onClick: View.OnClickListener) :
     ): MyViewHolder {
         val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.layout_item, parent, false) as View
-        return MyViewHolder(v, onClickNewsListener)
+        return MyViewHolder(v, onClickNewsListener,onNewsLongClickListener)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

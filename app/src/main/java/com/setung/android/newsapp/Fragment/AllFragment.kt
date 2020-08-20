@@ -79,6 +79,18 @@ class AllFragment(var category : String = "") : Fragment() {
                  intent.putExtra("url",viewAdapter.myDataset[position].url)
                 startActivity(intent)
             }
+        }, View.OnLongClickListener {
+            if(it.tag != null) {
+                val position = it.tag as Int
+
+                //공유 인텐트
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_TEXT, viewAdapter.myDataset[position].url)
+                startActivity(Intent.createChooser(intent, "Share News"))
+
+            }
+            true
         })
         
         recyclerView.setHasFixedSize(true)
