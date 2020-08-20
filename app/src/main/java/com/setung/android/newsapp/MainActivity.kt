@@ -2,6 +2,7 @@ package com.setung.android.newsapp
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -15,13 +16,14 @@ import com.setung.android.newsapp.Fragment.Adpater.PagerAdapter
 import com.setung.android.newsapp.Fragment.AllFragment
 import com.setung.android.newsapp.Model.NewsData
 import com.setung.android.newsapp.Retrofit.NewsRetrofit
+import com.setung.android.newsapp.Storage.StorageActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-    lateinit var sharedPref : SharedPreferences
+    lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,22 +36,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
-        inflater.inflate(R.menu.menu,menu)
+        inflater.inflate(R.menu.menu, menu)
 
-        val menuItem = menu?.findItem(R.id.menu_language)
-        menuItem!!.setOnMenuItemClickListener {
+        val menuCountry = menu?.findItem(R.id.menu_language)
+        menuCountry!!.setOnMenuItemClickListener {
 
-            val countryList = arrayOf("South Korea","United States","China","Japan","United Kingdom")
-            val languageList = arrayOf("kr","us","cn","jp","gb")
+            val countryList =
+                arrayOf("South Korea", "United States", "China", "Japan", "United Kingdom")
+            val languageList = arrayOf("kr", "us", "cn", "jp", "gb")
 
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Language")
             builder.setItems(countryList) { dialogInterface, i ->
 
-                MetaData.NEWS_COUNTRY=languageList[i]
-                sharedPref?.edit()?.putString("lan",languageList[i])?.commit()
+                MetaData.NEWS_COUNTRY = languageList[i]
+                sharedPref?.edit()?.putString("lan", languageList[i])?.commit()
 
-                Toast.makeText(this,countryList[i],Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, countryList[i], Toast.LENGTH_SHORT).show()
 
                 // viewPager를 굳이 새로 만드는 이유
                 // 국적 변경시 어중간한 위치에 있는 프래그먼트의 리사이클러뷰는 뉴스기사가 안바뀜
@@ -61,12 +64,21 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        val menuStorage = menu?.findItem(R.id.menu_storage)
+        menuStorage!!.setOnMenuItemClickListener {
+
+            val intent = Intent(this, StorageActivity::class.java)
+            startActivity(intent)
+
+            true
+        }
+
         return super.onCreateOptionsMenu(menu)
     }
 
     fun setViewPager() {
         viewPager.adapter = PagerAdapter(this)
-        val tabLayoutMediator = TabLayoutMediator(tabLayout,viewPager,
+        val tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager,
             TabLayoutMediator.TabConfigurationStrategy() { tab: TabLayout.Tab, position: Int ->
 
                 when (position) {
@@ -107,7 +119,7 @@ class MainActivity : AppCompatActivity() {
     fun getPreferencesData() {
         sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
-            MetaData.NEWS_COUNTRY= sharedPref?.getString("lan","kr") ?:"kr"
+            MetaData.NEWS_COUNTRY = sharedPref?.getString("lan", "kr") ?: "kr"
         }
     }
 }

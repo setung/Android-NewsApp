@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,14 +22,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AllFragment(var category : String = "") : Fragment() {
+class AllFragment(var category: String = "") : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeView: SwipeRefreshLayout
     private lateinit var viewAdapter: RecyclerViewAdapter
     private lateinit var viewManager: LinearLayoutManager
 
     companion object {
-        lateinit var currentFragment : AllFragment
+        lateinit var currentFragment: AllFragment
     }
 
     override fun onCreateView(
@@ -72,27 +73,45 @@ class AllFragment(var category : String = "") : Fragment() {
 
         viewManager = LinearLayoutManager(context)
         viewAdapter = RecyclerViewAdapter(View.OnClickListener {
-            if(it.tag != null) {
+            if (it.tag != null) {
                 val position = it.tag as Int
 
                 val intent = Intent(context, DetailActivity::class.java)
-                 intent.putExtra("url",viewAdapter.myDataset[position].url)
+                intent.putExtra("url", viewAdapter.myDataset[position].url)
                 startActivity(intent)
             }
         }, View.OnLongClickListener {
-            if(it.tag != null) {
+            if (it.tag != null) {
                 val position = it.tag as Int
 
-                //공유 인텐트
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT, viewAdapter.myDataset[position].url)
-                startActivity(Intent.createChooser(intent, "Share News"))
+                val countryList = arrayOf("Share", "Save")
+                val builder = AlertDialog.Builder(context!!)
+                builder.setTitle("Choose Option")
+                builder.setItems(countryList) { dialogInterface, i ->
+
+                    when (i) {
+                        0 -> {
+                            //공유 인텐트
+                            val intent = Intent(Intent.ACTION_SEND)
+                            intent.type = "text/plain"
+                            intent.putExtra(Intent.EXTRA_TEXT, viewAdapter.myDataset[position].url)
+                            startActivity(Intent.createChooser(intent, "Share News"))
+                        }
+                        1 -> {
+                            Toast.makeText(context, "${countryList[i]} Saved", Toast.LENGTH_SHORT).show()
+
+                        }
+                    }
+
+
+                }
+                builder.create().show()
+
 
             }
             true
         })
-        
+
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = viewManager
         recyclerView.adapter = viewAdapter
@@ -106,7 +125,6 @@ class AllFragment(var category : String = "") : Fragment() {
             swipeView.isRefreshing = false
         }
     }
-
 
 
 }
