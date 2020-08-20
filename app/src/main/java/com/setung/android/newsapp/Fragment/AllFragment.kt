@@ -11,8 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.setung.android.newsapp.DetailActivity
+import com.setung.android.newsapp.Detail.DetailActivity
 import com.setung.android.newsapp.Fragment.RecyclerView.RecyclerViewAdapter
 import com.setung.android.newsapp.MetaData
 import com.setung.android.newsapp.Model.NewsData
@@ -25,36 +24,11 @@ import retrofit2.Response
 class AllFragment(var category : String = "") : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeView: SwipeRefreshLayout
-
+    private lateinit var viewAdapter: RecyclerViewAdapter
     private lateinit var viewManager: LinearLayoutManager
 
-    init {
-        scategory = category
-    }
-
     companion object {
-        var scategory : String = ""
-        private lateinit var viewAdapter: RecyclerViewAdapter
-
-        fun getNewsData() {
-            NewsRetrofit.getService().requestNews(country = MetaData.NEWS_COUNTRY, category = scategory)
-                .enqueue(object : Callback<NewsData> {
-                    override fun onFailure(call: Call<NewsData>, t: Throwable) {}
-
-                    override fun onResponse(call: Call<NewsData>, response: Response<NewsData>) {
-                        if (response.isSuccessful) {
-                            val news = response.body()!!.articles
-
-                            viewAdapter.myDataset = news
-                            viewAdapter.notifyDataSetChanged()
-
-                            for (n in news) {
-                                Log.d("news", n.title)
-                            }
-                        }
-                    }
-                })
-        }
+        lateinit var currentFragment : AllFragment
     }
 
     override fun onCreateView(
@@ -66,8 +40,8 @@ class AllFragment(var category : String = "") : Fragment() {
         recyclerView = v.findViewById(R.id.recyclerView)
         swipeView = activity!!.findViewById(R.id.swipe_view)
 
-        setSwipeViewRefresh()
         initRecyclerView()
+        setSwipeViewRefresh()
         getNewsData()
         return v
     }
@@ -120,5 +94,7 @@ class AllFragment(var category : String = "") : Fragment() {
             swipeView.isRefreshing = false
         }
     }
+
+
 
 }

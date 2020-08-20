@@ -27,11 +27,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
-        with(sharedPref.edit()) {
-            MetaData.NEWS_COUNTRY= sharedPref?.getString("lan","kr") ?:"kr"
-        }
-
+        getPreferencesData()
 
         setViewPager()
     }
@@ -43,21 +39,22 @@ class MainActivity : AppCompatActivity() {
         val menuItem = menu?.findItem(R.id.menu_language)
         menuItem!!.setOnMenuItemClickListener {
 
-            val lan = arrayOf("South Korea","United States","China","Japan","United Kingdom")
-            val lan2 = arrayOf("kr","us","cn","jp","gb")
-
-
+            val countryList = arrayOf("South Korea","United States","China","Japan","United Kingdom")
+            val languageList = arrayOf("kr","us","cn","jp","gb")
 
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Language")
-            builder.setItems(lan) { dialogInterface, i ->
+            builder.setItems(countryList) { dialogInterface, i ->
 
-                MetaData.NEWS_COUNTRY=lan2[i]
-                sharedPref?.edit()?.putString("lan",lan2[i])?.commit()
+                MetaData.NEWS_COUNTRY=languageList[i]
+                sharedPref?.edit()?.putString("lan",languageList[i])?.commit()
 
-                Toast.makeText(this,lan[i],Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,countryList[i],Toast.LENGTH_SHORT).show()
 
-                AllFragment.getNewsData()
+                // viewPager를 굳이 새로 만드는 이유
+                // 국적 변경시 어중간한 위치에 있는 프래그먼트의 리사이클러뷰는 뉴스기사가 안바뀜
+                // 약간 어색하지만 뷰페이져를 변경된 국적의 기사로 초기화 하는게 깔끔함.
+                setViewPager()
             }
             builder.create().show()
 
@@ -69,9 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     fun setViewPager() {
         viewPager.adapter = PagerAdapter(this)
-        val tabLayoutMediator = TabLayoutMediator(
-            tabLayout,
-            viewPager,
+        val tabLayoutMediator = TabLayoutMediator(tabLayout,viewPager,
             TabLayoutMediator.TabConfigurationStrategy() { tab: TabLayout.Tab, position: Int ->
 
                 when (position) {
@@ -107,5 +102,12 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         tabLayoutMediator.attach()
+    }
+
+    fun getPreferencesData() {
+        sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            MetaData.NEWS_COUNTRY= sharedPref?.getString("lan","kr") ?:"kr"
+        }
     }
 }

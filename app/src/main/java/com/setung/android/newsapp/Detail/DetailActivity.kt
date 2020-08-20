@@ -1,11 +1,11 @@
-package com.setung.android.newsapp
+package com.setung.android.newsapp.Detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebViewClient
-import com.setung.android.newsapp.Model.Article
+import com.setung.android.newsapp.R
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {

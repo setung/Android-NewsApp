@@ -12,27 +12,41 @@ class PagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fr
     override fun createFragment(position: Int): Fragment {
         when (position) {
             0 -> {
-                return AllFragment()
+                val fg = AllFragment()
+                AllFragment.currentFragment = fg
+                return fg
             }
 
             1 -> {
-                return AllFragment(category = "business")
+                val fg = AllFragment(category = "business")
+                AllFragment.currentFragment = fg
+                return fg
             }
 
             2 -> {
-                return AllFragment(category = "entertainment")
+                val fg = AllFragment(category = "entertainment")
+                AllFragment.currentFragment = fg
+                return fg
             }
             3 -> {
-                return AllFragment(category = "health")
+                val fg = AllFragment(category = "health")
+                AllFragment.currentFragment = fg
+                return fg
             }
             4 -> {
-                return AllFragment(category = "science")
+                val fg = AllFragment(category = "science")
+                AllFragment.currentFragment = fg
+                return fg
             }
             5 -> {
-                return AllFragment(category = "sports")
+                val fg = AllFragment(category = "sports")
+                AllFragment.currentFragment = fg
+                return fg
             }
             6 -> {
-                return AllFragment(category = "technology")
+                val fg = AllFragment(category = "technology")
+                AllFragment.currentFragment = fg
+                return fg
             }
         }
         return AllFragment()
