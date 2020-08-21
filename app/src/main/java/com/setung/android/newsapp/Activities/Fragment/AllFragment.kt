@@ -1,4 +1,4 @@
-package com.setung.android.newsapp.Fragment
+package com.setung.android.newsapp.Activities.Fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,12 +12,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.setung.android.newsapp.Detail.DetailActivity
-import com.setung.android.newsapp.Fragment.RecyclerView.RecyclerViewAdapter
+import com.setung.android.newsapp.Activities.Detail.DetailActivity
+import com.setung.android.newsapp.Activities.MainActivity
+import com.setung.android.newsapp.RecyclerView.RecyclerViewAdapter
 import com.setung.android.newsapp.MetaData
 import com.setung.android.newsapp.Model.NewsData
 import com.setung.android.newsapp.R
 import com.setung.android.newsapp.Retrofit.NewsRetrofit
+import com.setung.android.newsapp.Room.AppDatabase
+import com.setung.android.newsapp.Room.StorageNewsData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -98,15 +101,26 @@ class AllFragment(var category: String = "") : Fragment() {
                             startActivity(Intent.createChooser(intent, "Share News"))
                         }
                         1 -> {
-                            Toast.makeText(context, "${countryList[i]} Saved", Toast.LENGTH_SHORT).show()
+                            Thread {
+
+                                val db = AppDatabase.getDatabase(context!!)
+                                if (db.storageNewsDataDao().loadAllByUrl(viewAdapter.myDataset[position].url).isEmpty()) {
+                                    db.storageNewsDataDao().insert(StorageNewsData(viewAdapter.myDataset[position]))
+
+                                    this.activity?.runOnUiThread {
+                                        Toast.makeText(context!!, "saved", Toast.LENGTH_SHORT).show()
+                                    }
+                                } else this.activity?.runOnUiThread {
+                                    Toast.makeText(context!!, "already exist", Toast.LENGTH_SHORT).show()
+                                }
+                            }.start()
+
 
                         }
                     }
 
-
                 }
                 builder.create().show()
-
 
             }
             true

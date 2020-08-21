@@ -1,30 +1,24 @@
-package com.setung.android.newsapp
+package com.setung.android.newsapp.Activities
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.setung.android.newsapp.Fragment.Adpater.PagerAdapter
-import com.setung.android.newsapp.Fragment.AllFragment
-import com.setung.android.newsapp.Model.NewsData
-import com.setung.android.newsapp.Retrofit.NewsRetrofit
-import com.setung.android.newsapp.Storage.StorageActivity
+import com.setung.android.newsapp.Activities.Fragment.Adpater.PagerAdapter
+import com.setung.android.newsapp.MetaData
+import com.setung.android.newsapp.R
+import com.setung.android.newsapp.Activities.Storage.StorageActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     lateinit var sharedPref: SharedPreferences
-
+    var backClickTime: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -58,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                 // 국적 변경시 어중간한 위치에 있는 프래그먼트의 리사이클러뷰는 뉴스기사가 안바뀜
                 // 약간 어색하지만 뷰페이져를 변경된 국적의 기사로 초기화 하는게 깔끔함.
                 setViewPager()
+                supportActionBar?.title = "NewsApp (${countryList[i]})"
             }
             builder.create().show()
 
@@ -122,4 +117,20 @@ class MainActivity : AppCompatActivity() {
             MetaData.NEWS_COUNTRY = sharedPref?.getString("lan", "kr") ?: "kr"
         }
     }
+
+    override fun onBackPressed() {
+        val time1 = System.currentTimeMillis()
+        val time2 = time1 - backClickTime
+        if (time2 in 0..2000) {
+            finish()
+        } else {
+            backClickTime = time1
+            Toast.makeText(
+                applicationContext,
+                "Press one more time and it'll be over.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
 }

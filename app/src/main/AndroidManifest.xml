@@ -12,16 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Storage.StorageActivity"></activity>
-        <activity android:name=".SplashActivity">
+        <activity android:name="com.setung.android.newsapp.Activities.Storage.StorageActivity"></activity>
+        <activity android:name=".Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Detail.DetailActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name="com.setung.android.newsapp.Activities.Detail.DetailActivity" />
+        <activity android:name=".Activities.MainActivity"></activity>
     </application>
 
 </manifest>

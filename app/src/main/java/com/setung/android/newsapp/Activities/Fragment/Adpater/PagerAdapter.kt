@@ -1,9 +1,9 @@
-package com.setung.android.newsapp.Fragment.Adpater
+package com.setung.android.newsapp.Activities.Fragment.Adpater
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.setung.android.newsapp.Fragment.*
+import com.setung.android.newsapp.Activities.Fragment.*
 
 
 class PagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {

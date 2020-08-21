@@ -1,4 +1,4 @@
-package com.setung.android.newsapp.Fragment.RecyclerView
+package com.setung.android.newsapp.RecyclerView
 
 import android.view.LayoutInflater
 import android.view.View

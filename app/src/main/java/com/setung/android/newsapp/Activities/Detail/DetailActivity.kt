@@ -1,4 +1,4 @@
-package com.setung.android.newsapp.Detail
+package com.setung.android.newsapp.Activities.Detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
